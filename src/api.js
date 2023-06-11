@@ -24,7 +24,7 @@ router.post("/easyeyes", (req, res) => {
   const receivedString = req.body;
   // Handle the received string from EasyEyes, e.g. pass it to MATLAB
   EasyeyesMessage = receivedString;
-  res.json({message: "EasyEyes Status: " + EasyeyesMessage});
+  res.json({message: "EasyEyes: " + EasyeyesMessage});
 });
 
 router.get("/easyeyes", (req, res) => {
@@ -32,20 +32,20 @@ router.get("/easyeyes", (req, res) => {
 });
 
 router.post("/filename", (req, res) => {
-  const receivedString = req.body.string;
+  const receivedString = req.body;
   fileName = receivedString;
-  res.json({message: "filename: " + fileName});
+  res.json({message: "Sent filename: " + fileName});
 });
 
 router.get("/filename", (req, res) => {
-  res.json({message: "" + fileName });
+  res.json({fileName: "" + fileName });
 });
 
 router.post("/matlab", (req, res) => {
   const receivedString = req.body;
   // Handle the received string from MATLAB
-  matlabStmatlabMessageatus = receivedString;
-  res.json({ message: "MATLAB message: " + matlabMessage});
+  matlabMessage = receivedString;
+  res.json({ message: "MATLAB: " + matlabMessage});
 });
 
 router.get("/matlab", (req, res) => {
