@@ -1,8 +1,10 @@
 const express = require("express");
 const serverless = require("serverless-http");
+const cors = require('cors');
 
 // Create an instance of the Express app
 const app = express();
+app.use(cors());
 
 // Create a router to handle routes
 const router = express.Router();
@@ -12,6 +14,42 @@ router.get("/", (req, res) => {
   res.json({
     hello: "hi!"
   });
+});
+
+let EasyeyesMessage = '';
+let matlabMessage = '';
+let fileName = '';
+
+router.post("/easyeyes", (req, res) => {
+  const receivedString = req.body;
+  // Handle the received string from EasyEyes, e.g. pass it to MATLAB
+  EasyeyesMessage = receivedString;
+  res.json({message: "EasyEyes Status: " + EasyeyesMessage});
+});
+
+router.get("/easyeyes", (req, res) => {
+  res.json({message: "" + EasyeyesMessage });
+});
+
+router.post("/filename", (req, res) => {
+  const receivedString = req.body.string;
+  fileName = receivedString;
+  res.json({message: "filename: " + fileName});
+});
+
+router.get("/filename", (req, res) => {
+  res.json({message: "" + fileName });
+});
+
+router.post("/matlab", (req, res) => {
+  const receivedString = req.body;
+  // Handle the received string from MATLAB
+  matlabStmatlabMessageatus = receivedString;
+  res.json({ message: "MATLAB message: " + matlabMessage});
+});
+
+router.get("/matlab", (req, res) => {
+  res.json({message: "" + matlabMessage});
 });
 
 // Use the router to handle requests to the `/.netlify/functions/api` path
