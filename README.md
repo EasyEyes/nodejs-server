@@ -24,15 +24,19 @@ Set these environment variables to enable the bridge:
   minutes)
 
 Every bridge request must also send an `X-Bridge-Session` value containing 1 to
-64 letters, numbers, underscores, or hyphens. Messages are isolated by this
-session value. Idle sessions expire, and session count and request rate are
-bounded. Request bodies use JSON in the form `{ "message": "..." }`; messages
-are limited to 4096 characters and JSON bodies to 64 KiB.
+64 letters, numbers, underscores, or hyphens. Messages are stored in separate
+partitions selected by this value. A session identifier is not an access
+control: any bearer-token holder can name any session. Idle sessions expire,
+and session count and request rate are bounded. Request bodies use JSON in the
+form `{ "message": "..." }`; messages are limited to 4096 characters and JSON
+bodies to 64 KiB.
 
 The token only protects this prototype; it does not provide user identity or
 role-based authorization. Do not put `BRIDGE_TOKEN` in public browser code. A
 public or multi-user deployment needs a reviewed identity model, rate limiting,
 durable per-session storage with expiry, monitoring, and an identified owner.
+The in-process limiter is only prototype containment; production needs an
+upstream or identity-bound limit that also covers unauthenticated traffic.
 
 ## Routes
 

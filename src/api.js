@@ -71,7 +71,6 @@ const createApp = (config = readConfig()) => {
       },
     })
   );
-  app.use(express.json({ limit: "64kb", strict: true }));
 
   router.get("/", (_request, response) => {
     response.json({ status: "ok" });
@@ -145,6 +144,8 @@ const createApp = (config = readConfig()) => {
 
     next();
   });
+
+  router.use(express.json({ limit: "64kb", strict: true }));
 
   const registerMessageRoutes = (path, responseKey) => {
     router.post(path, (request, response) => {

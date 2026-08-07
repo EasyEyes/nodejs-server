@@ -83,7 +83,7 @@ test("bridge messages must use the documented bounded JSON shape", async () => {
   assert.deepEqual(validResponse.body, { message: "calibration ready" });
 });
 
-test("one bridge session cannot read another session's messages", async () => {
+test("messages are stored in separate caller-selected session partitions", async () => {
   const app = createApp(enabledConfig);
 
   await authorizedRequest(app, "post", "/.netlify/functions/api/easyeyes").send({
