@@ -1,13 +1,7 @@
-const express = require('express');
-const app = express();
-const port = process.env.PORT || 3000;
+const app = require("./src/api");
 
-// Define your routes
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});
+const port = Number.parseInt(process.env.PORT || "3000", 10);
 
-// Start the server
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Bridge service is listening on port ${port}`);
 });
