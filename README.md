@@ -19,11 +19,15 @@ Set these environment variables to enable the bridge:
 - `ALLOWED_ORIGINS`: a comma-separated list of exact browser origins; omit it
   for server-to-server use
 - `MAX_BRIDGE_SESSIONS`: maximum in-memory sessions; defaults to `100`
+- `MAX_REQUESTS_PER_MINUTE`: per-session fixed-window limit; defaults to `60`
+- `BRIDGE_SESSION_TTL_MS`: idle session expiry; defaults to `900000` (15
+  minutes)
 
 Every bridge request must also send an `X-Bridge-Session` value containing 1 to
 64 letters, numbers, underscores, or hyphens. Messages are isolated by this
-session value. Request bodies use JSON in the form `{ "message": "..." }` and
-messages are limited to 4096 characters. JSON bodies are limited to 64 KiB.
+session value. Idle sessions expire, and session count and request rate are
+bounded. Request bodies use JSON in the form `{ "message": "..." }`; messages
+are limited to 4096 characters and JSON bodies to 64 KiB.
 
 The token only protects this prototype; it does not provide user identity or
 role-based authorization. Do not put `BRIDGE_TOKEN` in public browser code. A
@@ -41,7 +45,8 @@ The Netlify function base path is `/.netlify/functions/api`.
 
 ## Development
 
-Use a supported Node.js LTS release.
+Use Node.js 24 LTS, as recorded in `.nvmrc`. The package also accepts Node.js
+22 LTS for compatibility.
 
 ```sh
 npm ci

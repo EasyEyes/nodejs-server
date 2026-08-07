@@ -116,3 +116,44 @@ test("the bridge rejects new sessions after its configured capacity", async () =
   assert.equal(response.status, 503);
   assert.deepEqual(response.body, { error: "Bridge session capacity reached" });
 });
+
+test("the bridge rate-limits repeated requests within one window", async () => {
+  const app = createApp({
+    ...enabledConfig,
+    maxRequestsPerMinute: 1,
+  });
+
+  await authorizedRequest(app, "get", "/.netlify/functions/api/easyeyes");
+  const response = await authorizedRequest(
+    app,
+    "get",
+    "/.netlify/functions/api/easyeyes"
+  );
+
+  assert.equal(response.status, 429);
+  assert.deepEqual(response.body, { error: "Too many bridge requests" });
+});
+
+test("expired sessions release capacity", async () => {
+  let currentTime = 1_000;
+  const app = createApp({
+    ...enabledConfig,
+    maxSessions: 1,
+    now: () => currentTime,
+    sessionTtlMs: 500,
+  });
+
+  await authorizedRequest(app, "post", "/.netlify/functions/api/easyeyes").send({
+    message: "session-a message",
+  });
+  currentTime += 501;
+  const response = await authorizedRequest(
+    app,
+    "post",
+    "/.netlify/functions/api/easyeyes"
+  )
+    .set("X-Bridge-Session", "session-b")
+    .send({ message: "session-b message" });
+
+  assert.equal(response.status, 200);
+});
